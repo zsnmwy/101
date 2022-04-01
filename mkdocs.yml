@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
+theme:
+  name: material
+  language: en
+  features:
+    - toc.integrate
+  palette:
+    primary: deep purple
+extra_css:
+  - stylesheets/extra.css
+plugins:
+  - search
+markdown_extensions:
+  - codehilite
+  - admonition
+  - toc:
+      permalink: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+repo_url: https://github.com/cncamp/101
+repo_name: cncamp/101
+site_name: Kubernetes 101
+nav:
+  - Overview: index.md
+  - Install Kubernetes Cluster:
+      - Overview: install-kubernetes-cluster/index.md
+      - Vagrant: install-kubernetes-cluster/vagrant.md
+      - Kubeadm: install-kubernetes-cluster/kubeadm.md
+      - Minikube: install-kubernetes-cluster/minikube.md
+      - Kind: install-kubernetes-cluster/kind.md
+  - Docker Core Technology: docker-core-technology.md
+  - Kubernetes Architecture Principles and Object Design: kubernetes-architecture-principales-and-object-design.md
+  - 'Kubernetes Control Plane Component: etcd': kubernetes-control-plane-component-etcd.md
+  - 'Kubernetes Control Plane Component: Api-Server': kubernetes-control-plane-component-api-server.md
+  - 'Kubernetes Control Plane Component: Scheduler and Controller': kubernetes-control-plane-component-schedule-and-controller.md
+  - 'Kubernetes Control Plane Component: Lifecycle Management and Service Discovery': kubernetes-control-plane-component-lifecycle-management-and-service-discovery.md
+  - Managing Production-ready Kubernetes Clusters: management-production-ready-clusters.md
+  - DevOps with Kubernetes in Production: devops-with-kubernetes-in-production.md
+  - Migrating apps to Kubernetes: migrating-apps-to-kubernetes.md
+  - Advanced Traffic Management with Istio: advanced-traffic-management-with-istio.md

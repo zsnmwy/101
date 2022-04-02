@@ -20,6 +20,8 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
 repo_url: https://github.com/cncamp/101
 repo_name: cncamp/101
 site_name: Kubernetes 101

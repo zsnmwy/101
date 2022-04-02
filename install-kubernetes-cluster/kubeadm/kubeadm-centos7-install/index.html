@@ -1,0 +1,1247 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.2.8">
+    
+    
+      
+        <title>Centos - Kubernetes 101</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.644de097.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.e6a45f82.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#7e56c2">
+        
+      
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="deep-purple" data-md-color-accent="">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#preparation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Kubernetes 101" class="md-header__button md-logo" aria-label="Kubernetes 101" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Kubernetes 101
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Centos
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/cncamp/101" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    cncamp/101
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Kubernetes 101" class="md-nav__button md-logo" aria-label="Kubernetes 101" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    Kubernetes 101
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/cncamp/101" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    cncamp/101
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          Install Kubernetes Cluster
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Install Kubernetes Cluster" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Install Kubernetes Cluster
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../vagrant/" class="md-nav__link">
+        Vagrant
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_3" type="checkbox" id="__nav_2_3" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_3">
+          Kubeadm
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Kubeadm" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_3">
+          <span class="md-nav__icon md-icon"></span>
+          Kubeadm
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_3_1" type="checkbox" id="__nav_2_3_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_3_1">
+          Ubuntu
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Ubuntu" data-md-level="3">
+        <label class="md-nav__title" for="__nav_2_3_1">
+          <span class="md-nav__icon md-icon"></span>
+          Ubuntu
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../k8s-by-kubeadm/1.vm-install/" class="md-nav__link">
+        VM Install
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../k8s-by-kubeadm/2.docker-install/" class="md-nav__link">
+        Docker Install
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../k8s-by-kubeadm/3.k8s-install/" class="md-nav__link">
+        Kubernetes Install
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../k8s-by-kubeadm/resize-vm/" class="md-nav__link">
+        Resize VM
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Centos
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Centos
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#preparation" class="md-nav__link">
+    Preparation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#install" class="md-nav__link">
+    Install
+  </a>
+  
+    <nav class="md-nav" aria-label="Install">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#virtualbox" class="md-nav__link">
+    virtualbox
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#centos7" class="md-nav__link">
+    centos7
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kubedam" class="md-nav__link">
+    kubedam
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    summary
+  </a>
+  
+    <nav class="md-nav" aria-label="summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#errors" class="md-nav__link">
+    Errors
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    References
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../minikube/" class="md-nav__link">
+        Minikube
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../kind/" class="md-nav__link">
+        Kind
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../docker-core-technology.md" class="md-nav__link">
+        Docker Core Technology
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kubernetes-architecture-principales-and-object-design.md" class="md-nav__link">
+        Kubernetes Architecture Principles and Object Design
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kubernetes-control-plane-component-etcd.md" class="md-nav__link">
+        Kubernetes Control Plane Component: etcd
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kubernetes-control-plane-component-api-server.md" class="md-nav__link">
+        Kubernetes Control Plane Component: Api-Server
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kubernetes-control-plane-component-schedule-and-controller.md" class="md-nav__link">
+        Kubernetes Control Plane Component: Scheduler and Controller
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../kubernetes-control-plane-component-lifecycle-management-and-service-discovery.md" class="md-nav__link">
+        Kubernetes Control Plane Component: Lifecycle Management and Service Discovery
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../management-production-ready-clusters.md" class="md-nav__link">
+        Managing Production-ready Kubernetes Clusters
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../devops-with-kubernetes-in-production.md" class="md-nav__link">
+        DevOps with Kubernetes in Production
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../migrating-apps-to-kubernetes.md" class="md-nav__link">
+        Migrating apps to Kubernetes
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../advanced-traffic-management-with-istio.md" class="md-nav__link">
+        Advanced Traffic Management with Istio
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+<a href="https://github.com/cncamp/101/edit/master/docs/install-kubernetes-cluster/kubeadm/kubeadm-centos7-install.md" title="Edit this page" class="md-content__button md-icon">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+</a>
+
+
+
+  <h1>Centos</h1>
+
+<h2 id="preparation">Preparation<a class="headerlink" href="#preparation" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://www.virtualbox.org/">virtualbox6.1</a></li>
+<li><a href="https://mirrors.aliyun.com/centos/7/isos/x86_64/">centos iso</a></li>
+</ul>
+<h2 id="install">Install<a class="headerlink" href="#install" title="Permanent link">&para;</a></h2>
+<h3 id="virtualbox">virtualbox<a class="headerlink" href="#virtualbox" title="Permanent link">&para;</a></h3>
+<ul>
+<li>create a new box<ul>
+<li>name</li>
+<li>folder path</li>
+<li>type: Linux</li>
+<li>version: Other Linux (64-bit)</li>
+</ul>
+</li>
+<li>memory<ul>
+<li>4096M</li>
+</ul>
+</li>
+<li>cpu<ul>
+<li>number:2</li>
+<li>peak load: 100%</li>
+</ul>
+</li>
+<li>hard disk<ul>
+<li>create a virtual hard disk now</li>
+<li>choose VDI</li>
+<li>Fixed size</li>
+<li>100GB</li>
+</ul>
+</li>
+<li>
+<p>network</p>
+<ul>
+<li>adapter1<ul>
+<li>Attached to: NAT</li>
+<li>Advanced: default</li>
+<li>notice: remember <code>MAC Address</code>(080027A71D80), we could use it later for linux setting</li>
+</ul>
+</li>
+<li>adapter2<ul>
+<li>Attached to: Host-only Adapter</li>
+<li>Name: vboxnet0</li>
+<li>advanced:default</li>
+<li>notice: remember <code>MAC Address(0800271EED5C)</code>, we could use it later for linux setting</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>set iso file</p>
+<ul>
+<li>choose your box, right click it, then choose setting</li>
+<li>storage</li>
+<li>choose the logo which is like a CD</li>
+<li>Attributes =&gt; Optical Drive: (click the CD logo and choose your centos iso file)</li>
+</ul>
+</li>
+</ul>
+<h3 id="centos7">centos7<a class="headerlink" href="#centos7" title="Permanent link">&para;</a></h3>
+<ul>
+<li>double click your box</li>
+<li>start (you could make sure the ios again)</li>
+<li>install centos7</li>
+<li>language:English</li>
+<li>Date&amp;Time: Asia/Shanghai</li>
+<li>System<ul>
+<li>Installation destination: choose your vdi </li>
+</ul>
+</li>
+<li>Begin installation</li>
+<li>Root password</li>
+<li>reboot</li>
+<li>login</li>
+<li>set network adapter<ul>
+<li>vi /etc/sysconfig/network-scripts/ifcfg-enp0s3
+  <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>HWADDR=08:00:27:0A:E8:8F
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>TYPE=Ethernet
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>PROXY_METHOD=none
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>BROWSER_ONLY=no
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>BOOTPROTO=dhcp
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>DEFROUTE=yes
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>IPV4_FAILURE_FATAL=no
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>IPV6INIT=yes
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>IPV6_AUTOCONF=yes
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>IPV6_DEFROUTE=yes
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>IPV6_FAILURE_FATAL=no
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>IPV6_ADDR_GEN_MODE=stable-privacy
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>NAME=enp0s3
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>UUID=a88c90f7-f616-48ab-ba82-335c2d5c652d
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>DEVICE=enp0s3
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>ONBOOT=yes
+</code></pre></div></li>
+<li>vi /etc/sysconfig/network-scripts/ifcfg-enp0s8
+  <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>HWADDR=08:00:27:DC:76:AA
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>TYPE=Ethernet
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>PROXY_METHOD=none
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>BROWSER_ONLY=no
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>BOOTPROTO=static
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>DEFROUTE=yes
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>IPV4_FAILURE_FATAL=no
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>IPV6INIT=yes
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>IPV6_AUTOCONF=yes
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>IPV6_DEFROUTE=yes
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>IPV6_FAILURE_FATAL=no
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>IPV6_ADDR_GEN_MODE=stable-privacy
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>NAME=enp0s8 // Note that it is consistent with the file name suffix
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>UUID=a88c90f7-f616-48ab-ba82-335c2d5c652d
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>DEVICE=enp0s8 // Note that it is consistent with the file name suffix
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>ONBOOT=yes
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>NM_CONTROLLED=yes
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>IPADDR=192.168.56.200 
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>NETMASK=255.255.255.0
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>GATEWAY=192.168.56.1
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>DNS1=8.8.8.8
+</code></pre></div></li>
+</ul>
+</li>
+<li>vi /etc/hostname<ul>
+<li>vm210</li>
+<li>notice: don't use underline and special characters</li>
+</ul>
+</li>
+<li>vi /etc/hosts
+  <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>192.168.56.210 vm210
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>192.168.56.211 vm211
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>192.168.56.212 vm212
+</code></pre></div></li>
+<li>shutdown -r</li>
+<li>login again</li>
+<li>ping a website you know. if you could visit it which we could make sure the network is ok now.</li>
+<li>next, you could use item2 to make the next setps, because it's quite easy to edit your content.</li>
+<li>iptables
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>cat &lt;&lt;EOF | sudo tee /etc/modules-load.d/k8s.conf
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>br_netfilter
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>EOF
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>cat &lt;&lt;EOF | sudo tee /etc/sysctl.d/k8s.conf
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>net.bridge.bridge-nf-call-ip6tables = 1
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>net.bridge.bridge-nf-call-iptables = 1
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>EOF
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>sudo sysctl --system
+</code></pre></div></li>
+<li>firewall
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>systemctl stop firewalld
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>systemctl disable firewalld
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>systemctl status firewalld
+</code></pre></div></li>
+<li>SELinux
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vi /etc/selinux/config
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a># This file controls the state of SELinux on the system.
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a># SELINUX= can take one of these three values:
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>#     enforcing - SELinux security policy is enforced.
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>#     permissive - SELinux prints warnings instead of enforcing.
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>#     disabled - No SELinux policy is loaded.
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>#SELINUX=enforcing
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a># SELINUXTYPE= can take one of three values:
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>#     targeted - Targeted processes are protected,
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>#     minimum - Modification of targeted policy. Only selected processes are protected.
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>#     mls - Multi Level Security protection.
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>#SELINUXTYPE=targeted 
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>SELINUX=disabled 
+</code></pre></div></li>
+<li>
+<p>swap 
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>// temp turn off
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>[root@vm210 ~]# swapoff -a
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>// Permanently turn off
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>[root@vm210 ~]# vi /etc/fstab
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>#
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a># /etc/fstab
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a># Created by anaconda on Sun Aug 22 00:58:48 2021
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>#
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a># Accessible filesystems, by reference, are maintained under &#39;/dev/disk&#39;
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a># See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>#
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>/dev/mapper/centos-root /                       xfs     defaults        0 0
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>UUID=be6fcb6b-d425-4cc6-9e97-0bba2b1c7236 /boot                   xfs     defaults        0 0
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>/dev/mapper/centos-home /home                   xfs     defaults        0 0
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>#/dev/mapper/centos-swap swap                    swap    defaults        0 0  // Comment out the current line
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>[root@vm210 ~]# shutdown -r
+</code></pre></div></p>
+</li>
+<li>
+<p>timezone sync
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>yum install ntp
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>systemctl enable ntpd
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>systemctl start ntpd
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>timedatectl set-timezone Asia/Shanghai
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>timedatectl set-ntp yes
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>ntpq -p
+</code></pre></div></p>
+</li>
+</ul>
+<h3 id="kubedam">kubedam<a class="headerlink" href="#kubedam" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://docs.docker.com/engine/install/centos/">install docker</a><ul>
+<li>note：don't install docker with centos, you should choose docker-ce</li>
+</ul>
+</li>
+<li>yum source
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>vi /etc/yum.repos.d/kubernetes.repo
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a># choose the right baseurl which you feel better in your country.
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>[kubernetes]
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>name=Kubernetes
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>enabled=1
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>gpgcheck=0
+</code></pre></div></li>
+<li>kubelet kubeadm install
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>systemctl enable --now kubelet
+</code></pre></div></li>
+<li>
+<p>system starts docker
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>systemctl enable docker &amp;&amp; systemctl start docker
+</code></pre></div></p>
+</li>
+<li>
+<p>kubeadm
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>[root@vm210 ~]# kubeadm init   --image-repository registry.aliyuncs.com/google_containers   --kubernetes-version v1.22.0   --apiserver-advertise-address=192.168.56.130
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>[init] Using Kubernetes version: v1.22.0
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>[preflight] Running pre-flight checks
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>error execution phase preflight: [preflight] Some fatal errors occurred:
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    [ERROR NumCPU]: the number of available CPUs 1 is less than the required 2
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>[preflight] If you know what you are doing, you can make a check non-fatal with `--ignore-preflight-errors=...`
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>To see the stack trace of this error execute with --v=5 or higher
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>[root@vm210 ~]# kubelet --cgroupDriver
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>E0821 18:06:43.647211    8799 server.go:158] &quot;Failed to parse kubelet flag&quot; err=&quot;unknown flag: --cgroupDriver&quot;
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>[root@vm210 ~]# systemctl status kubelet
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>● kubelet.service - kubelet: The Kubernetes Node Agent
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>   Loaded: loaded (/usr/lib/systemd/system/kubelet.service; enabled; vendor preset: disabled)
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>  Drop-In: /usr/lib/systemd/system/kubelet.service.d
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>           └─10-kubeadm.conf
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>   Active: activating (auto-restart) (Result: exit-code) since 六 2021-08-21 18:19:45 CST; 5s ago
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>     Docs: https://kubernetes.io/docs/
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>  Process: 8186 ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_CONFIG_ARGS $KUBELET_KUBEADM_ARGS $KUBELET_EXTRA_ARGS (code=exited, status=1/FAILURE)
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a> Main PID: 8186 (code=exited, status=1/FAILURE)
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>8月 21 18:19:45 vm210 systemd[1]: kubelet.service: main process exited, code=exited, status=1/FAILURE
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>8月 21 18:19:45 vm210 systemd[1]: Unit kubelet.service entered failed state.
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>8月 21 18:19:45 vm210 systemd[1]: kubelet.service failed.
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>[root@vm210 ~]#vim /etc/docker/daemon.json
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>{
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>  &quot;exec-opts&quot;: [&quot;native.cgroupdriver=systemd&quot;]
+<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a>}
+<a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a>[root@vm210 ~]#systemctl daemon-reload
+<a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a>[root@vm210 ~]#systemctl restart docker
+<a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a>// unable to configure the Docker daemon with file /etc/docker/daemon.json
+<a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a>// choose to install docker-ce will solve this problem.
+<a id="__codelineno-11-34" name="__codelineno-11-34" href="#__codelineno-11-34"></a>
+<a id="__codelineno-11-35" name="__codelineno-11-35" href="#__codelineno-11-35"></a>[root@vm210 ~]#systemctl restart kubelet
+<a id="__codelineno-11-36" name="__codelineno-11-36" href="#__codelineno-11-36"></a>
+<a id="__codelineno-11-37" name="__codelineno-11-37" href="#__codelineno-11-37"></a>// run kuebeadm again
+<a id="__codelineno-11-38" name="__codelineno-11-38" href="#__codelineno-11-38"></a>ERROR: Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?
+<a id="__codelineno-11-39" name="__codelineno-11-39" href="#__codelineno-11-39"></a>errors pretty printing info
+<a id="__codelineno-11-40" name="__codelineno-11-40" href="#__codelineno-11-40"></a>, error: exit status 1
+<a id="__codelineno-11-41" name="__codelineno-11-41" href="#__codelineno-11-41"></a>    [ERROR Service-Docker]: docker service is not active, please run &#39;systemctl start docker.service&#39;
+<a id="__codelineno-11-42" name="__codelineno-11-42" href="#__codelineno-11-42"></a>
+<a id="__codelineno-11-43" name="__codelineno-11-43" href="#__codelineno-11-43"></a>[root@vm210 ~]#systemctl start docker.service
+<a id="__codelineno-11-44" name="__codelineno-11-44" href="#__codelineno-11-44"></a>
+<a id="__codelineno-11-45" name="__codelineno-11-45" href="#__codelineno-11-45"></a>error execution phase preflight: [preflight] Some fatal errors occurred:
+<a id="__codelineno-11-46" name="__codelineno-11-46" href="#__codelineno-11-46"></a>    [ERROR ImagePull]: failed to pull image registry.aliyuncs.com/google_containers/coredns:v1.8.4: output: Error response from daemon: manifest for registry.aliyuncs.com/google_containers/coredns:v1.8.4 not found: manifest unknown: manifest unknown
+<a id="__codelineno-11-47" name="__codelineno-11-47" href="#__codelineno-11-47"></a>
+<a id="__codelineno-11-48" name="__codelineno-11-48" href="#__codelineno-11-48"></a>[root@vm210 ~]# docker pull coredns/coredns
+<a id="__codelineno-11-49" name="__codelineno-11-49" href="#__codelineno-11-49"></a>Using default tag: latest
+<a id="__codelineno-11-50" name="__codelineno-11-50" href="#__codelineno-11-50"></a>latest: Pulling from coredns/coredns
+<a id="__codelineno-11-51" name="__codelineno-11-51" href="#__codelineno-11-51"></a>c6568d217a00: Pull complete
+<a id="__codelineno-11-52" name="__codelineno-11-52" href="#__codelineno-11-52"></a>bc38a22c706b: Pull complete
+<a id="__codelineno-11-53" name="__codelineno-11-53" href="#__codelineno-11-53"></a>Digest: sha256:6e5a02c21641597998b4be7cb5eb1e7b02c0d8d23cce4dd09f4682d463798890
+<a id="__codelineno-11-54" name="__codelineno-11-54" href="#__codelineno-11-54"></a>Status: Downloaded newer image for coredns/coredns:latest
+<a id="__codelineno-11-55" name="__codelineno-11-55" href="#__codelineno-11-55"></a>docker.io/coredns/coredns:latest
+<a id="__codelineno-11-56" name="__codelineno-11-56" href="#__codelineno-11-56"></a>
+<a id="__codelineno-11-57" name="__codelineno-11-57" href="#__codelineno-11-57"></a>[root@vm210 ~]# docker images
+<a id="__codelineno-11-58" name="__codelineno-11-58" href="#__codelineno-11-58"></a>REPOSITORY                                                        TAG       IMAGE ID       CREATED        SIZE
+<a id="__codelineno-11-59" name="__codelineno-11-59" href="#__codelineno-11-59"></a>registry.aliyuncs.com/google_containers/kube-apiserver            v1.22.0   838d692cbe28   2 weeks ago    128MB
+<a id="__codelineno-11-60" name="__codelineno-11-60" href="#__codelineno-11-60"></a>registry.aliyuncs.com/google_containers/kube-controller-manager   v1.22.0   5344f96781f4   2 weeks ago    122MB
+<a id="__codelineno-11-61" name="__codelineno-11-61" href="#__codelineno-11-61"></a>registry.aliyuncs.com/google_containers/kube-proxy                v1.22.0   bbad1636b30d   2 weeks ago    104MB
+<a id="__codelineno-11-62" name="__codelineno-11-62" href="#__codelineno-11-62"></a>registry.aliyuncs.com/google_containers/kube-scheduler            v1.22.0   3db3d153007f   2 weeks ago    52.7MB
+<a id="__codelineno-11-63" name="__codelineno-11-63" href="#__codelineno-11-63"></a>registry.aliyuncs.com/google_containers/etcd                      3.5.0-0   004811815584   2 months ago   295MB
+<a id="__codelineno-11-64" name="__codelineno-11-64" href="#__codelineno-11-64"></a>coredns/coredns                                                   latest    8d147537fb7d   2 months ago   47.6MB
+<a id="__codelineno-11-65" name="__codelineno-11-65" href="#__codelineno-11-65"></a>registry.aliyuncs.com/google_containers/pause                     3.5       ed210e3e4a5b   5 months ago   683kB
+<a id="__codelineno-11-66" name="__codelineno-11-66" href="#__codelineno-11-66"></a>
+<a id="__codelineno-11-67" name="__codelineno-11-67" href="#__codelineno-11-67"></a>[root@vm210 ~]# docker tag coredns/coredns:latest registry.aliyuncs.com/google_containers/coredns:v1.8.4
+<a id="__codelineno-11-68" name="__codelineno-11-68" href="#__codelineno-11-68"></a>
+<a id="__codelineno-11-69" name="__codelineno-11-69" href="#__codelineno-11-69"></a>[root@vm210 ~]# docker rmi coredns/coredns:latest
+<a id="__codelineno-11-70" name="__codelineno-11-70" href="#__codelineno-11-70"></a>
+<a id="__codelineno-11-71" name="__codelineno-11-71" href="#__codelineno-11-71"></a>// success infomation
+<a id="__codelineno-11-72" name="__codelineno-11-72" href="#__codelineno-11-72"></a>Your Kubernetes control-plane has initialized successfully!
+<a id="__codelineno-11-73" name="__codelineno-11-73" href="#__codelineno-11-73"></a>
+<a id="__codelineno-11-74" name="__codelineno-11-74" href="#__codelineno-11-74"></a>To start using your cluster, you need to run the following as a regular user:
+<a id="__codelineno-11-75" name="__codelineno-11-75" href="#__codelineno-11-75"></a>
+<a id="__codelineno-11-76" name="__codelineno-11-76" href="#__codelineno-11-76"></a>  mkdir -p $HOME/.kube
+<a id="__codelineno-11-77" name="__codelineno-11-77" href="#__codelineno-11-77"></a>  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+<a id="__codelineno-11-78" name="__codelineno-11-78" href="#__codelineno-11-78"></a>  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+<a id="__codelineno-11-79" name="__codelineno-11-79" href="#__codelineno-11-79"></a>
+<a id="__codelineno-11-80" name="__codelineno-11-80" href="#__codelineno-11-80"></a>Alternatively, if you are the root user, you can run:
+<a id="__codelineno-11-81" name="__codelineno-11-81" href="#__codelineno-11-81"></a>
+<a id="__codelineno-11-82" name="__codelineno-11-82" href="#__codelineno-11-82"></a>  export KUBECONFIG=/etc/kubernetes/admin.conf
+<a id="__codelineno-11-83" name="__codelineno-11-83" href="#__codelineno-11-83"></a>
+<a id="__codelineno-11-84" name="__codelineno-11-84" href="#__codelineno-11-84"></a>You should now deploy a pod network to the cluster.
+<a id="__codelineno-11-85" name="__codelineno-11-85" href="#__codelineno-11-85"></a>Run &quot;kubectl apply -f [podnetwork].yaml&quot; with one of the options listed at:
+<a id="__codelineno-11-86" name="__codelineno-11-86" href="#__codelineno-11-86"></a>  https://kubernetes.io/docs/concepts/cluster-administration/addons/
+<a id="__codelineno-11-87" name="__codelineno-11-87" href="#__codelineno-11-87"></a>
+<a id="__codelineno-11-88" name="__codelineno-11-88" href="#__codelineno-11-88"></a>Then you can join any number of worker nodes by running the following on each as root:
+<a id="__codelineno-11-89" name="__codelineno-11-89" href="#__codelineno-11-89"></a>
+<a id="__codelineno-11-90" name="__codelineno-11-90" href="#__codelineno-11-90"></a>kubeadm join 192.168.56.130:6443 --token i36hnn.8trjybo0msel27y6 \
+<a id="__codelineno-11-91" name="__codelineno-11-91" href="#__codelineno-11-91"></a>    --discovery-token-ca-cert-hash sha256:4667ecb1cbe7692b8bef1d3fac79be22a8cf3d2086f8fd5538e00fb2b08b9ee3
+</code></pre></div></p>
+</li>
+<li>clusters
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>// master
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>kubectl get pods --all-namespaces
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>NAMESPACE     NAME                            READY   STATUS    RESTARTS      AGE
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>kube-system   coredns-7f6cbbb7b8-9mg2x        0/1     Pending   0             8h
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>kube-system   coredns-7f6cbbb7b8-fldxl        0/1     Pending   0             8h
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>kube-system   etcd-vm210                      1/1     Running   4 (25m ago)   8h
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>kube-system   kube-apiserver-vm210            1/1     Running   3 (25m ago)   8h
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>kube-system   kube-controller-manager-vm210   1/1     Running   2 (25m ago)   8h
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>kube-system   kube-proxy-562x7                1/1     Running   1 (25m ago)   8h
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>kube-system   kube-proxy-dnwth                1/1     Running   1             95m
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>kube-system   kube-proxy-w2vth                1/1     Running   0             54m
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>kube-system   kube-scheduler-vm210            1/1     Running   5 (25m ago)   8h
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>You must deploy a Container Network Interface (CNI) based Pod network add-on 
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>so that your Pods can communicate with each other. 
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>Cluster DNS (CoreDNS) will not start up before a network is installed.
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>[root@vm210 ~]# kuletadm reset 
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>[root@vm210 ~]# kubeadm init   
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>    --image-repository registry.aliyuncs.com/google_containers  \
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>    --kubernetes-version v1.22.0  \
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>    --apiserver-advertise-address=192.168.56.210 \
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>    --pod-network-cidr=192.168.1.0/16
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>[root@vm210 ~]# wget https://docs.projectcalico.org/manifests/tigera-operator.yaml
+<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>[root@vm210 ~]# wget https://docs.projectcalico.org/manifests/custom-resources.yaml
+<a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a>// you should let the cidr match your network range, don not use the url to install directly.
+<a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a>[root@vm210 ~]# vim custom-resources.yaml
+<a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a>  cidr: 192.168.0.0/16  =&gt; cidr: 192.168.1.0/16
+<a id="__codelineno-12-30" name="__codelineno-12-30" href="#__codelineno-12-30"></a>[root@vm210 ~]# kubectl create -f tigera-operator.yaml
+<a id="__codelineno-12-31" name="__codelineno-12-31" href="#__codelineno-12-31"></a>[root@vm210 ~]# kubectl create -f custom-resources.yaml
+<a id="__codelineno-12-32" name="__codelineno-12-32" href="#__codelineno-12-32"></a>
+<a id="__codelineno-12-33" name="__codelineno-12-33" href="#__codelineno-12-33"></a>[root@vm210 ~]# watch kubectl get pods -n calico-system
+<a id="__codelineno-12-34" name="__codelineno-12-34" href="#__codelineno-12-34"></a>Every 2.0s: kubectl get pods -n calico-system                                                                                                                                                                         Sat Aug 21 02:22:02 2021
+<a id="__codelineno-12-35" name="__codelineno-12-35" href="#__codelineno-12-35"></a>
+<a id="__codelineno-12-36" name="__codelineno-12-36" href="#__codelineno-12-36"></a>NAME                                       READY   STATUS    RESTARTS   AGE
+<a id="__codelineno-12-37" name="__codelineno-12-37" href="#__codelineno-12-37"></a>calico-kube-controllers-868b656ff4-5fh56   1/1     Running   0          56m
+<a id="__codelineno-12-38" name="__codelineno-12-38" href="#__codelineno-12-38"></a>calico-node-4729c                          1/1     Running   0          56m
+<a id="__codelineno-12-39" name="__codelineno-12-39" href="#__codelineno-12-39"></a>calico-node-74xwl                          1/1     Running   0          51m
+<a id="__codelineno-12-40" name="__codelineno-12-40" href="#__codelineno-12-40"></a>calico-node-fgs7j                          1/1     Running   1          51m
+<a id="__codelineno-12-41" name="__codelineno-12-41" href="#__codelineno-12-41"></a>calico-typha-884bbd9c6-dd7lm               1/1     Running   1          51m
+<a id="__codelineno-12-42" name="__codelineno-12-42" href="#__codelineno-12-42"></a>calico-typha-884bbd9c6-kktwc               1/1     Running   4          51m
+<a id="__codelineno-12-43" name="__codelineno-12-43" href="#__codelineno-12-43"></a>calico-typha-884bbd9c6-xj9rc               1/1     Running   0          56m
+<a id="__codelineno-12-44" name="__codelineno-12-44" href="#__codelineno-12-44"></a>
+<a id="__codelineno-12-45" name="__codelineno-12-45" href="#__codelineno-12-45"></a>[root@vm210 ~]# watch kubectl get nodes
+<a id="__codelineno-12-46" name="__codelineno-12-46" href="#__codelineno-12-46"></a>NAME    STATUS   ROLES                  AGE   VERSION
+<a id="__codelineno-12-47" name="__codelineno-12-47" href="#__codelineno-12-47"></a>vm210   Ready    control-plane,master   59m   v1.22.0
+<a id="__codelineno-12-48" name="__codelineno-12-48" href="#__codelineno-12-48"></a>vm211   Ready    &lt;none&gt;                 52m   v1.22.0
+<a id="__codelineno-12-49" name="__codelineno-12-49" href="#__codelineno-12-49"></a>vm212   Ready    &lt;none&gt;                 51m   v1.22.1
+<a id="__codelineno-12-50" name="__codelineno-12-50" href="#__codelineno-12-50"></a>
+<a id="__codelineno-12-51" name="__codelineno-12-51" href="#__codelineno-12-51"></a>------------------------------------------------------
+<a id="__codelineno-12-52" name="__codelineno-12-52" href="#__codelineno-12-52"></a>
+<a id="__codelineno-12-53" name="__codelineno-12-53" href="#__codelineno-12-53"></a>// node1
+<a id="__codelineno-12-54" name="__codelineno-12-54" href="#__codelineno-12-54"></a>yum remove docker \
+<a id="__codelineno-12-55" name="__codelineno-12-55" href="#__codelineno-12-55"></a>                  docker-client \
+<a id="__codelineno-12-56" name="__codelineno-12-56" href="#__codelineno-12-56"></a>                  docker-client-latest \
+<a id="__codelineno-12-57" name="__codelineno-12-57" href="#__codelineno-12-57"></a>                  docker-common \
+<a id="__codelineno-12-58" name="__codelineno-12-58" href="#__codelineno-12-58"></a>                  docker-latest \
+<a id="__codelineno-12-59" name="__codelineno-12-59" href="#__codelineno-12-59"></a>                  docker-latest-logrotate \
+<a id="__codelineno-12-60" name="__codelineno-12-60" href="#__codelineno-12-60"></a>                  docker-logrotate \
+<a id="__codelineno-12-61" name="__codelineno-12-61" href="#__codelineno-12-61"></a>                  docker-engine
+<a id="__codelineno-12-62" name="__codelineno-12-62" href="#__codelineno-12-62"></a>
+<a id="__codelineno-12-63" name="__codelineno-12-63" href="#__codelineno-12-63"></a>yum install -y yum-utils
+<a id="__codelineno-12-64" name="__codelineno-12-64" href="#__codelineno-12-64"></a>yum-config-manager \
+<a id="__codelineno-12-65" name="__codelineno-12-65" href="#__codelineno-12-65"></a>    --add-repo \
+<a id="__codelineno-12-66" name="__codelineno-12-66" href="#__codelineno-12-66"></a>    https://download.docker.com/linux/centos/docker-ce.repo
+<a id="__codelineno-12-67" name="__codelineno-12-67" href="#__codelineno-12-67"></a>yum install docker-ce docker-ce-cli containerd.io
+<a id="__codelineno-12-68" name="__codelineno-12-68" href="#__codelineno-12-68"></a>systemctl start docker
+<a id="__codelineno-12-69" name="__codelineno-12-69" href="#__codelineno-12-69"></a>
+<a id="__codelineno-12-70" name="__codelineno-12-70" href="#__codelineno-12-70"></a>yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
+<a id="__codelineno-12-71" name="__codelineno-12-71" href="#__codelineno-12-71"></a>systemctl enable --now kubelet
+<a id="__codelineno-12-72" name="__codelineno-12-72" href="#__codelineno-12-72"></a>
+<a id="__codelineno-12-73" name="__codelineno-12-73" href="#__codelineno-12-73"></a>kubeadm join 192.168.56.210:6443 --token s2n0yr.0g5ujjrfthvjvr07 \
+<a id="__codelineno-12-74" name="__codelineno-12-74" href="#__codelineno-12-74"></a>--discovery-token-ca-cert-hash sha256:81974851f2e10bdb8bc401ebe2e0b16dc500bd13261342d80d9643ef4dc94a05
+<a id="__codelineno-12-75" name="__codelineno-12-75" href="#__codelineno-12-75"></a>
+<a id="__codelineno-12-76" name="__codelineno-12-76" href="#__codelineno-12-76"></a>[root@vm210 ~]# kubectl get nodes
+<a id="__codelineno-12-77" name="__codelineno-12-77" href="#__codelineno-12-77"></a>[kubelet-check] It seems like the kubelet isn&#39;t running or healthy.
+<a id="__codelineno-12-78" name="__codelineno-12-78" href="#__codelineno-12-78"></a>[kubelet-check] The HTTP call equal to &#39;curl -sSL http://localhost:10248/healthz&#39; failed with error: Get &quot;http://localhost:10248/healthz&quot;: dial tcp [::1]:10248: connect: connection refused.
+<a id="__codelineno-12-79" name="__codelineno-12-79" href="#__codelineno-12-79"></a>
+<a id="__codelineno-12-80" name="__codelineno-12-80" href="#__codelineno-12-80"></a>// solve the problem above
+<a id="__codelineno-12-81" name="__codelineno-12-81" href="#__codelineno-12-81"></a>[root@vm210 ~]#vim /etc/docker/daemon.json
+<a id="__codelineno-12-82" name="__codelineno-12-82" href="#__codelineno-12-82"></a>{
+<a id="__codelineno-12-83" name="__codelineno-12-83" href="#__codelineno-12-83"></a>  &quot;exec-opts&quot;: [&quot;native.cgroupdriver=systemd&quot;]
+<a id="__codelineno-12-84" name="__codelineno-12-84" href="#__codelineno-12-84"></a>}
+<a id="__codelineno-12-85" name="__codelineno-12-85" href="#__codelineno-12-85"></a>[root@vm210 ~]#systemctl daemon-reload
+<a id="__codelineno-12-86" name="__codelineno-12-86" href="#__codelineno-12-86"></a>[root@vm210 ~]#systemctl restart docker
+<a id="__codelineno-12-87" name="__codelineno-12-87" href="#__codelineno-12-87"></a>[root@vm210 ~]#systemctl restart kubelet
+<a id="__codelineno-12-88" name="__codelineno-12-88" href="#__codelineno-12-88"></a>
+<a id="__codelineno-12-89" name="__codelineno-12-89" href="#__codelineno-12-89"></a>[root@vm211 ~]# kubectl get nodes
+<a id="__codelineno-12-90" name="__codelineno-12-90" href="#__codelineno-12-90"></a>The connection to the server localhost:8080 was refused - did you specify the right host or port?
+<a id="__codelineno-12-91" name="__codelineno-12-91" href="#__codelineno-12-91"></a>
+<a id="__codelineno-12-92" name="__codelineno-12-92" href="#__codelineno-12-92"></a>kubectl version -o json
+<a id="__codelineno-12-93" name="__codelineno-12-93" href="#__codelineno-12-93"></a>kubectl cluster-info
+<a id="__codelineno-12-94" name="__codelineno-12-94" href="#__codelineno-12-94"></a>[root@vm211 ~]# kubectl cluster-info
+<a id="__codelineno-12-95" name="__codelineno-12-95" href="#__codelineno-12-95"></a>
+<a id="__codelineno-12-96" name="__codelineno-12-96" href="#__codelineno-12-96"></a>To further debug and diagnose cluster problems, use &#39;kubectl cluster-info dump&#39;.
+<a id="__codelineno-12-97" name="__codelineno-12-97" href="#__codelineno-12-97"></a>The connection to the server localhost:8080 was refused - did you specify the right host or port?
+<a id="__codelineno-12-98" name="__codelineno-12-98" href="#__codelineno-12-98"></a>
+<a id="__codelineno-12-99" name="__codelineno-12-99" href="#__codelineno-12-99"></a>[root@vm210 ~] systemctl status kubelet
+<a id="__codelineno-12-100" name="__codelineno-12-100" href="#__codelineno-12-100"></a>[root@vm210 ~] journalctl -xeu kubelet
+<a id="__codelineno-12-101" name="__codelineno-12-101" href="#__codelineno-12-101"></a>// Unable to update cni config&quot; err=&quot;no networks found in /etc/cni/net.d
+<a id="__codelineno-12-102" name="__codelineno-12-102" href="#__codelineno-12-102"></a>// if you encounter this problem, just to redo all the activity above on the node.
+</code></pre></div></li>
+</ul>
+<h2 id="summary">summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<ul>
+<li>What we need to note during the entire installation process is that don't just to search the key you see with command 'systemctl status kubelet' or 'journalctl -u kubelet'</li>
+<li>we must pay more attention to the args like $KUBELET_EXTRA_ARGS when we encounter some errors.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>&#39;Process: 8998 ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_CONFIG_ARGS $KUBELET_KUBEADM_ARGS $KUBELET_EXTRA_ARGS (code=exited, status=1/FAILURE)&#39;
+</code></pre></div></li>
+</ul>
+<h3 id="errors">Errors<a class="headerlink" href="#errors" title="Permanent link">&para;</a></h3>
+<ul>
+<li>The HTTP call equal to 'curl -sSL http://localhost:10248/healthz' failed with error: Get "http://localhost:10248/healthz": dial tcp [::1]:10248: connect: connection refused.<ul>
+<li>systemctl restart kubelet</li>
+</ul>
+</li>
+<li>[root@vm210 ~]# kubelet --cgroupDriver
+E0820 13:16:23.223925   31791 server.go:158] "Failed to parse kubelet flag" err="unknown flag: --cgroupDriver"<ul>
+<li>EnvironmentFile=-/var/lib/kubelet/kubeadm-flags.env</li>
+<li>remove the arg <code>cgroupDriver</code></li>
+<li>systemctl restart kubelet</li>
+</ul>
+</li>
+<li>check network<ul>
+<li>ip a</li>
+<li>cat /etc/resolv.conf</li>
+</ul>
+</li>
+</ul>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/kubelet-integration/#the-kubelet-drop-in-file-for-systemd">The kubelet drop-in file for systemd</a> </li>
+<li><a href="https://stackoverflow.com/questions/45708175/kubelet-failed-with-kubelet-cgroup-driver-cgroupfs-is-different-from-docker-c">kubelet failed with kubelet cgroup driver: “cgroupfs” is different from docker cgroup driver: “systemd”</a></li>
+<li><a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/kubelet-integration/#the-kubelet-drop-in-file-for-systemd">Configuring each kubelet in your cluster using kubeadm</a></li>
+<li><a href="https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/">Installing kubeadm</a></li>
+<li><a href="https://docs.projectcalico.org/getting-started/kubernetes/quickstart">Quickstart for Calico on Kubernetes</a></li>
+<li><a href="https://segmentfault.com/a/1190000021209788">kubeadm安装k8s完整教程</a></li>
+</ul>
+
+              
+            </article>
+          </div>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="../k8s-by-kubeadm/resize-vm/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Resize VM" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Resize VM
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../../minikube/" class="md-footer__link md-footer__link--next" aria-label="Next: Minikube" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Minikube
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["toc.integrate"], "search": "../../../assets/javascripts/workers/search.5e67fbfe.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.c44cc438.min.js"></script>
+      
+    
+  </body>
+</html>

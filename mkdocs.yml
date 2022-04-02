@@ -30,7 +30,13 @@ nav:
   - Install Kubernetes Cluster:
       - Overview: install-kubernetes-cluster/index.md
       - Vagrant: install-kubernetes-cluster/vagrant.md
-      - Kubeadm: install-kubernetes-cluster/kubeadm.md
+      - Kubeadm:
+          - Ubuntu:
+              - VM Install: install-kubernetes-cluster/kubeadm/k8s-by-kubeadm/1.vm-install.md
+              - Docker Install: install-kubernetes-cluster/kubeadm/k8s-by-kubeadm/2.docker-install.md
+              - Kubernetes Install: install-kubernetes-cluster/kubeadm/k8s-by-kubeadm/3.k8s-install.md
+              - Resize VM: install-kubernetes-cluster/kubeadm/k8s-by-kubeadm/resize-vm.md
+          - Centos: install-kubernetes-cluster/kubeadm/kubeadm-centos7-install.md
       - Minikube: install-kubernetes-cluster/minikube.md
       - Kind: install-kubernetes-cluster/kind.md
   - Docker Core Technology: docker-core-technology.md

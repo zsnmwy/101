@@ -1,12 +1,32 @@
 # Vagrant
 
+!!! Warning
+    Because of Apple's restrictions, higher versions of macOS will have greater limitations on Virtualbox.
+    
+    If you use Virtualbox for Vagrant provider, that will be full of strange questions.
+
+## Prerequisites
+
+- Vagrant
+- Virtualbox
+
 ## What's Vagrant
 
-Vagrant is ...
+[Vagrant](https://www.vagrantup.com/) - the command line utility for managing the lifecycle of virtual machines.
 
-## config
 
-```shell linenums="1"
+## What's Virtualbox
+
+[VirtualBox](https://www.virtualbox.org/wiki/Downloads) is a general-purpose full virtualizer for x86 hardware, targeted at server, desktop and embedded use.
+
+## Vagrant Config
+
+```shell
+echo "Create dir to store vagrant configuration"
+mkdir -p ~/k8s-vagrant/
+
+echo "Generate vagrant configuration"
+cat <<EOF | tee ~/k8s-vagrant/Vagrantfile
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
@@ -50,4 +70,16 @@ Vagrant.configure("2") do |config|
     adduser vagrant docker
   SHELL
 end
+EOF
+```
+## Initial VM
+
+```shell
+vagrant up
+```
+
+## Connect to the VM
+
+```shell
+vagrant ssh
 ```
